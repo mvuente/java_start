@@ -1,8 +1,4 @@
-import java.io.FileReader;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.File;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -11,20 +7,21 @@ public class SignTester {
     public static void main(String[] args) throws Exception
     {
         BufferedReader          reader = new BufferedReader(new FileReader("./signatures.txt"));
-        BufferedReader          smplreader = new BufferedReader(new FileReader("./sample.txt"));
-        String                  line, smbline, smplline, signline;
+        String                  line, smbline, signline;
         Map<String, String>     mytemplate = new HashMap<>();
-        smplline = smplreader.readLine();
-        StringBuffer            finline;
+        String                  finline;
         while ((line = reader.readLine()) != null)
         {
             smbline = line.substring(line.indexOf(',') + 2);
             signline = line.substring(0, line.indexOf(','));
             String[]            smbls = smbline.split(" ");
-            finline = new StringBuffer();
+            finline = new String();
             for (int i = 0; i < smbls.length; ++i)
-                finline.insert(finline.length(), (char) Integer.parseUnsignedInt(smbls[i], 16));
-            mytemplate.put(finline.toString(), signline);
+            {
+                int myint = Integer.valueOf(smbls[i], 16);
+                finline += (char) myint;
+            }
+            mytemplate.put(finline, signline);
         }
         Scanner                 scanner = new Scanner(System.in);
         String                  newfileaddr;
@@ -42,13 +39,14 @@ public class SignTester {
             FileInputStream     fis = new FileInputStream(newfileaddr);
             byte[]              buffer = new byte[8];
             int                 count = fis.read(buffer);
-            StringBuffer        linetocheck = new StringBuffer();
+            String              linetocheck = new String();
             for (int i = 0; i < count; ++i)
             {
-                linetocheck.insert(linetocheck.length(), (char) buffer[i]);
-                if (mytemplate.containsKey(linetocheck.toString()))
+               int              myint = (int) buffer[i] & 0xff;
+                linetocheck += (char) myint;
+                if (mytemplate.containsKey(linetocheck))
                 {
-                    String      out = mytemplate.get(linetocheck.toString()) + System.lineSeparator();
+                    String      out = mytemplate.get(linetocheck) + System.lineSeparator();
                     fos.write(out.getBytes());
                     break;
                 }
