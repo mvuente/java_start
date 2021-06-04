@@ -1,0 +1,21 @@
+Here I need to implement an application that will determine the level of similarity between texts. The simplest and most obvious method to do this is to analyze the frequency of occurrence of the same words.
+
+Let's assume that we have two following texts:
+
+1. aaa bba bba a ссс
+2. bba a a a bb xxx
+Let's create a dictionary that contains all words in these texts:
+
+a, aaa, bb, bba, ccc, xxx
+Now let's create two vectors with length equal to that of the dictionary. In i-th position of each vector, we shall reflect the frequency of occurrence of the i-th word in our dictionary in the former and latter texts:
+
+A = (1, 1, 0, 2, 1, 0)
+B = (3, 0, 1, 1, 0, 1)
+Thus, each of these vectors characterizes the text in terms of frequency of occurrence of words from our dictionary. Let's determine the similarity between vectors A and B as sum of all A[i]*B[i] divided by composition of their modules. My  goal is to implement an application that accepts two files as an input (both files are passed as command-line arguments) and displays their similarity comparison outcome (cosine measure).
+
+
+Example of program operation:
+java Plagiat inputA.txt inputB.txt
+Similarity = 0.54
+
+f1.txt and f2.txt files are provided as examples.
