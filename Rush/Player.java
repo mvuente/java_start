@@ -10,6 +10,7 @@ public class Player {
     public void marioMove()
     {
         //алгоритм движения
+
     }
 
     public Point  getPlayerCoord()
