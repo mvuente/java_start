@@ -73,16 +73,16 @@ public class GameMap {
             String  drawString = new String("");
             for (int j = 0; j < this._size; ++j)
             {
-                Point coord = new Point();
-                coord.x = j;
-                coord.y = i;
+                Point coord = new Point(j, i);
+//                coord.x = j;
+//                coord.y = i;
                 if (_enemies.contains(coord))
                     drawString = drawString + this._enemySmpl;
                 else if (_obst.contains(coord))
                     drawString = drawString + this._wallSmpl;
-                else if (_player.x == j && _player.y == i)
+                else if (_player.equals(coord))
                     drawString = drawString + this._playerSmpl;
-                else if (_target.x == j && _target.y == i)
+                else if (_target.equals(coord))
                     drawString = drawString + this._targetSmpl;
                 else
                     drawString = drawString + this._spaceSmpl;
@@ -117,9 +117,9 @@ public class GameMap {
 
     public Tokens   getAt(Point point)
     {
-        if (this._player == point)
+        if (this._player.equals(point))
             return Tokens.PLAYER;
-        else if (this._target == point)
+        else if (this._target.equals(point))
             return Tokens.TARGET;
         else if (this._obst.contains(point))
             return Tokens.WALL;
@@ -139,7 +139,17 @@ public class GameMap {
         return this._player;
     }
 
-    public void updatePlayer(Tokens t, Point oldPoint, Point newPoint) // когда использовать этот метод
+    public Point          getTarget()
+    {
+        return this._target;
+    }
+
+    public Vector<Point>  getObst()
+    {
+        return this._obst;
+    }
+
+    public GameMap updateEntity(Tokens t, Point oldPoint, Point newPoint) // когда использовать этот метод
     {
         if (t == Tokens.PLAYER)
         {
@@ -149,11 +159,26 @@ public class GameMap {
         {
             for (Point p : this._enemies)
             {
-                if (p == oldPoint)
-                    p = newPoint;
+                if (p.equals(oldPoint)) {
+                    System.out.println("Finded");
+                    p.setLocation(newPoint);
+                }
             }
         }
+        return this;
     }
+
+    public static GameMap pather(String path, Player mario, GameMap map)
+    {
+        System.out.println(path + " " + path.length());
+        if (!path.equals("a") && !path.equals("s") && !path.equals("d") && !path.equals("w"))
+            return null;
+        System.out.println("Test");
+//        if (!mario.marioMove(path, map))
+//            return null;
+        return mario.marioMove(path, map);
+    }
+
 
     // пока не пишу передвижение скалоедов: они могут ходить вместе на одну клетку или нет?
 
@@ -186,9 +211,34 @@ public class GameMap {
         obst_num = scanner.nextInt();
 
         GameMap map = new GameMap(size, enem_num, obst_num);
+        GameMap newmap;
         map.drawMap();
+        System.out.println(map.getEnemies().size());
         Enemies enem_proup = new Enemies(enem_num, map.getEnemies());
         Player  mario = new Player(map.getPlayer());
+        String        path;
+        scanner.nextLine();
+        while (true)
+        {
+            System.out.println("Please, tell me, where you're going to (W, A, S, D)");
+            //path = scanner.nextLine();
+            while ((newmap = pather(scanner.nextLine(), mario, map)) == null)
+                System.out.println("Wrong choice! Change, please");
+            map = newmap;
+            if (!map.getPlayer().equals(map.getTarget()))
+            {
+                map = enem_proup.enemies_attack(map);
+                if (map.getEnemies().contains(map.getPlayer()))
+                {
+                    System.out.println("You lose! It's pitty!");
+                    System.exit(0);
+                }
+            }
+            else
+                break;
+            map.drawMap();
+        }
+        System.out.println("You won! Congratulations!");
 
         //System.out.println(map.getAt((11)));
     }

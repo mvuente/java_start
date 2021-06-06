@@ -5,8 +5,13 @@ public class Enem {
     Enem(Point coord) {
         this._coord = coord;
     }
-    public void enemMove() {
-        //меняем текущие координаты этого скалоеда
+    public GameMap enemMove(GameMap map) {
+        Pathfinder  pth = new Pathfinder(map, _coord, map.getPlayer());
+        Point newpoint = pth.nextPoint();
+        System.out.println(_coord.equals(newpoint));
+        map.updateEntity(GameMap.Tokens.ENEMY, _coord, newpoint);
+        _coord = newpoint;
+        return map;
     }
 
     public Point  getEnemCoord()
