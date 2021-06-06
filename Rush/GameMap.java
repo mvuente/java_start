@@ -1,4 +1,6 @@
 
+import com.sun.media.jfxmedia.events.PlayerEvent;
+
 import java.util.Vector;
 import java.util.Scanner;
 import java.util.Random;
@@ -135,6 +137,33 @@ public class GameMap {
             return Tokens.TARGET;
     }
 
+    public Vector<Vector<Integer>>  getEnemies()
+    {
+        return this._enemies;
+    }
+
+    public Vector<Integer>          getPlayer()
+    {
+        return this._player;
+    }
+
+    public void updatePlayer(Vector<Integer> newPoint) // когда использовать этот метод
+    {
+        if (newPoint != this._player)
+        {
+            String  substr, newsubstr;
+            substr = this._map[this._player.elementAt(1)].substring(this._player.elementAt(1) * 10); // выделил в новую строку кусок строки карты, начинающийся с цвета старого положения игрока. СТРОКА1
+            newsubstr = substr.replaceFirst(this._playerSmpl, this._spaceSmpl); // замена поля игрока на поле пробела с цветом. СТРОКА2
+            this._map[this._player.elementAt(1)] = this._map[this._player.elementAt(1)].replaceFirst(substr, newsubstr);// В строке карты заменил кусок СТРОКА1 на кусок СТРОКА2
+            //теперь та же операция для новой точки
+            substr = this._map[newPoint.elementAt(1)].substring(newPoint.elementAt(1) * 10); // выделил в новую строку кусок строки карты, начинающийся с цвета нового положения игрока (сейчас это пробел). СТРОКА1
+            newsubstr = substr.replaceFirst(this._spaceSmpl, this._playerSmpl); // замена поля пробела на поле игрока с цветом. СТРОКА2
+            this._map[newPoint.elementAt(1)] = this._map[newPoint.elementAt(1)].replaceFirst(substr, newsubstr);// В строке карты заменил кусок СТРОКА1 на кусок СТРОКА2
+        }
+    }
+
+    // пока не пишу передвижение скалоедов: они могут ходить вместе на одну клетку или нет?
+
     private GameMap() {};
     private int _size;
     private int _enem_num;
@@ -165,6 +194,9 @@ public class GameMap {
 
         GameMap map = new GameMap(size, enem_num, obst_num);
         map.drawMap();
+        Enemies enem_proup = new Enemies(enem_num, map.getEnemies());
+        Player  mario = new Player(map.getPlayer());
+
         System.out.println(map.getAt(1,1));
     }
 }
