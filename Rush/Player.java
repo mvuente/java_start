@@ -1,7 +1,8 @@
 import java.util.Vector;
+import java.awt.Point;
 
 public class Player {
-    Player(Vector<Integer> coord)
+    Player(Point coord)
     {
         this._my_coord = coord;
     }
@@ -11,10 +12,10 @@ public class Player {
         //алгоритм движения
     }
 
-    public Vector<Integer>  getPlayerCoord()
+    public Point  getPlayerCoord()
     {
         return this._my_coord;
     }
 
-    private Vector<Integer> _my_coord;
+    private Point _my_coord;
 }

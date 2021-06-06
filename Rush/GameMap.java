@@ -1,9 +1,9 @@
 
-import com.sun.media.jfxmedia.events.PlayerEvent;
 
 import java.util.Vector;
 import java.util.Scanner;
 import java.util.Random;
+import java.awt.Point;
 
 
 public class GameMap {
@@ -43,7 +43,7 @@ public class GameMap {
         this._enemies = new Vector<>(_enem_num); // начальные координаты скалоедов
         for (int i = 0; i < _enem_num; ++i)
         {
-            Vector<Integer> enem_coord = new Vector<>(2);
+            Point enem_coord = new Point();
             this.randomizer(enem_coord);
             _enemies.add(enem_coord);
         }
@@ -51,15 +51,15 @@ public class GameMap {
         this._obst = new Vector<>(_obst_num); // координаты препятствий
         for (int i = 0; i < _obst_num; ++i)
         {
-            Vector<Integer> obst_coord = new Vector<>(2);
+            Point obst_coord = new Point();
             this.randomizer(obst_coord);
             _obst.add(obst_coord);
         }
 
-        this._player = new Vector<>(2); // начальные координаты игрока
+        this._player = new Point(); // начальные координаты игрока
         this.randomizer(_player);
 
-        this._target = new Vector<>(2); // коордтинаты цели
+        this._target = new Point(); // коордтинаты цели
         this.randomizer(_target);
 
         this.mapRecorder();
@@ -81,9 +81,9 @@ public class GameMap {
                     this._map[i] = this._map[i] + this._enemySmpl;
                 else if (_obst.contains(coord))
                     this._map[i] = this._map[i] + this._wallSmpl;
-                else if (_player.elementAt(0) == j && _player.elementAt(1) == i)
+                else if (_player.x == j && _player.y == i)
                     this._map[i] = this._map[i] + this._playerSmpl;
-                else if (_target.elementAt(0) == j && _target.elementAt(1) == i)
+                else if (_target.x == j && _target.y == i)
                     this._map[i] = this._map[i] + this._targetSmpl;
                 else
                     this._map[i] = this._map[i] + this._spaceSmpl;
@@ -99,17 +99,17 @@ public class GameMap {
         }
     }
 
-    public void    randomizer(Vector<Integer> myvect)
+    public void    randomizer(Point myvect)
     {
         Random  myrand = new Random();
         int     tmp;
         while (true)
         {
-            for (int i = 0; i < 2; ++i)
-            {
-                tmp = Math.abs(myrand.nextInt() % this._size);
-                myvect.add(tmp);
-            }
+            tmp = Math.abs(myrand.nextInt() % this._size);
+            myvect.x = tmp;
+            tmp = Math.abs(myrand.nextInt() % this._size);
+            myvect.y = tmp;
+
             if (this._all_coords.size() == 0 || (this._all_coords.size() > 0 && !this._all_coords.contains(myvect)))
             {
                 this._all_coords.add(myvect); //собират все точки карты, чтобы не было наложений
@@ -137,28 +137,28 @@ public class GameMap {
             return Tokens.TARGET;
     }
 
-    public Vector<Vector<Integer>>  getEnemies()
+    public Vector<Point>  getEnemies()
     {
         return this._enemies;
     }
 
-    public Vector<Integer>          getPlayer()
+    public Point          getPlayer()
     {
         return this._player;
     }
 
-    public void updatePlayer(Vector<Integer> newPoint) // когда использовать этот метод
+    public void updatePlayer(Point newPoint) // когда использовать этот метод
     {
         if (newPoint != this._player)
         {
             String  substr, newsubstr;
-            substr = this._map[this._player.elementAt(1)].substring(this._player.elementAt(1) * 10); // выделил в новую строку кусок строки карты, начинающийся с цвета старого положения игрока. СТРОКА1
+            substr = this._map[this._player.y].substring(this._player.x * 10); // выделил в новую строку кусок строки карты, начинающийся с цвета старого положения игрока. СТРОКА1
             newsubstr = substr.replaceFirst(this._playerSmpl, this._spaceSmpl); // замена поля игрока на поле пробела с цветом. СТРОКА2
-            this._map[this._player.elementAt(1)] = this._map[this._player.elementAt(1)].replaceFirst(substr, newsubstr);// В строке карты заменил кусок СТРОКА1 на кусок СТРОКА2
+            this._map[this._player.y] = this._map[this._player.y].replaceFirst(substr, newsubstr);// В строке карты заменил кусок СТРОКА1 на кусок СТРОКА2
             //теперь та же операция для новой точки
-            substr = this._map[newPoint.elementAt(1)].substring(newPoint.elementAt(1) * 10); // выделил в новую строку кусок строки карты, начинающийся с цвета нового положения игрока (сейчас это пробел). СТРОКА1
+            substr = this._map[newPoint.y].substring(newPoint.x * 10); // выделил в новую строку кусок строки карты, начинающийся с цвета нового положения игрока (сейчас это пробел). СТРОКА1
             newsubstr = substr.replaceFirst(this._spaceSmpl, this._playerSmpl); // замена поля пробела на поле игрока с цветом. СТРОКА2
-            this._map[newPoint.elementAt(1)] = this._map[newPoint.elementAt(1)].replaceFirst(substr, newsubstr);// В строке карты заменил кусок СТРОКА1 на кусок СТРОКА2
+            this._map[newPoint.y] = this._map[newPoint.y].replaceFirst(substr, newsubstr);// В строке карты заменил кусок СТРОКА1 на кусок СТРОКА2
         }
     }
 
@@ -168,11 +168,11 @@ public class GameMap {
     private int _size;
     private int _enem_num;
     private int _obst_num;
-    private Vector<Vector<Integer>>     _enemies;
-    private Vector<Vector<Integer>>     _obst;
-    private Vector<Vector<Integer>>     _all_coords;
-    private Vector<Integer>             _player;
-    private Vector<Integer>             _target;
+    private Vector<Point>     _enemies;
+    private Vector<Point>     _obst;
+    private Vector<Point>     _all_coords;
+    private Point             _player;
+    private Point             _target;
     private String[]                    _map;
     private String                      _spaceSmpl;
     private String                      _wallSmpl;

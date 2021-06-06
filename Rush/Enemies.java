@@ -1,6 +1,7 @@
 import java.util.Vector;
+import java.awt.Point;
 public class Enemies {
-    Enemies(int num, Vector<Vector<Integer>> coord)
+    Enemies(int num, Vector<Point> coord)
     {
         this._enemies_num = num;
         for (int i = 0; i < _enemies_num; ++i)
