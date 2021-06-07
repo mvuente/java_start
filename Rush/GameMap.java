@@ -37,7 +37,6 @@ public class GameMap {
 
         this._all_coords = new Vector<>(); //хранит все структурные элементы карты кроме пустых полей
         this._size = size;
-        //this._map = new String[this._size];
         this._enem_num = enem_num; // кол-во скалоедов
         this._obst_num = obst_num; // кол-во препятствий
         this._enemies = new Vector<>(_enem_num); // начальные координаты скалоедов
@@ -69,13 +68,10 @@ public class GameMap {
     {
         for (int i = 0; i < this._size; ++i)
         {
-            //this._map[i] = new String();
             String  drawString = new String("");
             for (int j = 0; j < this._size; ++j)
             {
                 Point coord = new Point(j, i);
-//                coord.x = j;
-//                coord.y = i;
                 if (_enemies.contains(coord))
                     drawString = drawString + this._enemySmpl;
                 else if (_obst.contains(coord))
@@ -174,29 +170,23 @@ public class GameMap {
         if (!path.equals("a") && !path.equals("s") && !path.equals("d") && !path.equals("w"))
             return null;
         System.out.println("Test");
-//        if (!mario.marioMove(path, map))
-//            return null;
         return mario.marioMove(path, map);
     }
 
-
-    // пока не пишу передвижение скалоедов: они могут ходить вместе на одну клетку или нет?
-
     private GameMap() {};
-    private int _size;
-    private int _enem_num;
-    private int _obst_num;
-    private Vector<Point>     _enemies;
-    private Vector<Point>     _obst;
-    private Vector<Point>     _all_coords;
-    private Point             _player;
-    private Point             _target;
-    //private String[]                    _map;
-    private String                      _spaceSmpl;
-    private String                      _wallSmpl;
-    private String                      _enemySmpl;
-    private String                      _playerSmpl;
-    private String                      _targetSmpl;
+    private int             _size;
+    private int             _enem_num;
+    private int             _obst_num;
+    private Vector<Point>   _enemies;
+    private Vector<Point>   _obst;
+    private Vector<Point>   _all_coords;
+    private Point           _player;
+    private Point           _target;
+    private String          _spaceSmpl;
+    private String          _wallSmpl;
+    private String          _enemySmpl;
+    private String          _playerSmpl;
+    private String          _targetSmpl;
 
     public static void  main(String[] args) {
 
@@ -212,16 +202,13 @@ public class GameMap {
 
         GameMap map = new GameMap(size, enem_num, obst_num);
         GameMap newmap;
-        map.drawMap();
-        System.out.println(map.getEnemies().size());
+        System.out.println("Hi, Mario! You're in green cell. Your target is a blue cell. Red cells - are enemies. Move to your target and avoid enemies. ");
         Enemies enem_proup = new Enemies(enem_num, map.getEnemies());
         Player  mario = new Player(map.getPlayer());
-        String        path;
         scanner.nextLine();
         while (true)
         {
             System.out.println("Please, tell me, where you're going to (W, A, S, D)");
-            //path = scanner.nextLine();
             while ((newmap = pather(scanner.nextLine(), mario, map)) == null)
                 System.out.println("Wrong choice! Change, please");
             map = newmap;
@@ -240,6 +227,5 @@ public class GameMap {
         }
         System.out.println("You won! Congratulations!");
 
-        //System.out.println(map.getAt((11)));
     }
 }

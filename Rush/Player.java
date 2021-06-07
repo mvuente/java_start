@@ -10,24 +10,7 @@ public class Player {
     public GameMap marioMove(String path, GameMap map)
     {
         Point   newpoint = new Point(_my_coord);
-//        switch (path) {
-//            case "w":
-//                if (newpoint.y == 0)
-//                    return null;
-//                newpoint.translate(0, -1);
-//            case "s":
-//                if (newpoint.y == map.getSize() - 1)
-//                    return null;
-//                newpoint.translate(1, 0);
-//            case "a":
-//                if (newpoint.x == 0)
-//                    return null;
-//                newpoint.translate(-1, 0);
-//            case "d":
-//                if (newpoint.x == map.getSize() - 1)
-//                    return null;
-//                newpoint.translate(0, 1);
-//        }
+
         if (path.equals("w"))
             if (newpoint.getY() != 0)
                 newpoint.translate(0, -1);

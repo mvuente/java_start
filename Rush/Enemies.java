@@ -1,5 +1,6 @@
 import java.util.Vector;
 import java.awt.Point;
+
 public class Enemies {
     Enemies(int num, Vector<Point> coord)
     {
